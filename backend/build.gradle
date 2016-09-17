@@ -1,0 +1,61 @@
+// backend build.gradle
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // spring
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE')
+        classpath('org.springframework:springloaded:1.2.6.RELEASE')
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("${buildDir}/classes/main/")
+    }
+}
+
+jar {
+    baseName = 'spring-boot-angular2'
+    version = '1.0.3'
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    dev
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-jersey')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-ws')
+    runtime fileTree(dir: 'libs', include: '*.jar')
+    runtime("org.postgresql:postgresql:9.4.1210")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+// run spring boot app
+bootRun {
+//    addResources = true
+    classpath = sourceSets.main.runtimeClasspath + configurations.dev
+}
+
+// run all task
+task runAll {}
+runAll.dependsOn(bootRun)
+
